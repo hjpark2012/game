@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050912" />
+    <title>VOIDLINE // INTERCEPT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/game/assets/index-WoDWu4Mp.js"></script>
+    <link rel="stylesheet" crossorigin href="/game/assets/index-B7tqQ6LX.css">
+  </head>
+  <body>
+    <main id="game" aria-label="Voidline space combat game">
+      <canvas id="space" aria-hidden="true"></canvas>
+      <div class="vignette" aria-hidden="true"></div>
+
+      <section class="hud" aria-label="Flight instrumentation">
+        <div class="top-bar">
+          <div class="brand"><span class="brand-mark">V</span><span>VOIDLINE</span><small>INTERCEPT COMMAND</small></div>
+          <div class="mission"><span class="live-dot"></span> SECTOR 07 // HOSTILE INCURSION</div>
+          <div class="clock" id="clock">00:00.0</div>
+        </div>
+
+        <div class="objective panel">
+          <span class="eyebrow">PRIMARY OBJECTIVE</span>
+          <strong id="objective">CLEAR THE SECTOR</strong>
+          <span id="hostileCount">HOSTILES: 08</span>
+        </div>
+
+        <div class="target-info panel" id="targetInfo">
+          <span class="eyebrow">LOCKED CONTACT</span>
+          <strong id="targetName">NO TARGET</strong>
+          <div class="target-row"><span id="targetDist">—</span><span id="targetState">SCANNING</span></div>
+          <div class="target-health"><i id="targetHealth"></i></div>
+        </div>
+
+        <div class="left-readouts">
+          <div class="readout speed"><span>VELOCITY</span><strong id="speed">580</strong><em>KPS</em></div>
+          <div class="readout altitude"><span>VECTOR</span><strong id="vector">000</strong><em>°</em></div>
+          <div class="bar-group"><div><span>HULL</span><b id="hullText">100</b></div><div class="meter hull"><i id="hullBar"></i></div></div>
+          <div class="bar-group"><div><span>BOOST</span><b id="boostText">100</b></div><div class="meter boost"><i id="boostBar"></i></div></div>
+        </div>
+
+        <div class="radar panel" aria-label="Tactical radar"><span class="eyebrow">TACTICAL // 4.8KM</span><div class="radar-screen"><div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-axis x"></div><div class="radar-axis y"></div><div class="ship-dot"></div><div id="radarDots"></div></div></div>
+
+        <div class="weapon-panel panel"><span class="eyebrow">ARMAMENT</span><div class="weapon-row"><span class="weapon-icon">⊹</span><div><strong>PLASMA CANNON</strong><small>∞ CHARGE</small></div><kbd>CLICK</kbd></div><div class="weapon-row missile"><span class="weapon-icon">◈</span><div><strong>SEEKER MISSILES</strong><small id="missileCount">04 ORDNANCE</small></div><kbd>Q</kbd></div></div>
+
+        <div class="reticle" id="reticle"><span class="reticle-distance" id="reticleDistance">2.4KM</span><i class="r-tl"></i><i class="r-tr"></i><i class="r-bl"></i><i class="r-br"></i><b></b></div>
+        <div class="hit-marker" id="hitMarker">×</div>
+
+        <div class="cockpit" aria-hidden="true"><div class="cockpit-left"></div><div class="cockpit-right"></div><div class="cockpit-bottom"></div></div>
+        <div class="bottom-bar"><span><kbd>W A S D</kbd> MANEUVER</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>Q</kbd> MISSILE</span><span><kbd>R</kbd> RESTART</span><span class="score">SCORE <b id="score">000000</b></span></div>
+      </section>
+
+      <section class="start-screen" id="startScreen">
+        <div class="start-card">
+          <p class="eyebrow">V/07 // DEEP SPACE COMBAT SIMULATION</p>
+          <h1>VOIDLINE<br /><span>INTERCEPT</span></h1>
+          <p class="intro">고속 요격기를 타고 적 함대의 침입을 저지하십시오.<br />조준은 마우스, 공격은 클릭으로 시작합니다.</p>
+          <button id="launch">MISSION LAUNCH <span>↗</span></button>
+          <div class="tips"><span>WASD / ARROWS — MANEUVER</span><span>SHIFT — AFTERBURNER</span><span>Q — SEEKER</span></div>
+        </div>
+      </section>
+
+      <section class="end-screen hidden" id="endScreen"><div class="end-card"><p class="eyebrow" id="resultLabel">SECTOR SECURED</p><h2 id="resultTitle">MISSION<br /><span>COMPLETE</span></h2><p id="resultText">침입 함대를 격퇴했습니다.</p><div class="final-score"><small>FINAL SCORE</small><strong id="finalScore">000000</strong></div><button id="restart">REDEPLOY <span>↗</span></button></div></section>
+    </main>
+  </body>
+</html>
