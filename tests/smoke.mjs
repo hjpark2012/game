@@ -30,8 +30,21 @@ try {
   assert.match(await page.locator('#studyLevelName').textContent(), /700/);
   assert.ok((await page.locator('#collocationText').textContent())?.length > 0);
 
-  await page.evaluate(() => navigator.serviceWorker.ready);
-  await page.reload({ waitUntil: 'networkidle' });
+  await Promise.race([
+    page.evaluate(() => navigator.serviceWorker.ready),
+    page.waitForTimeout(15_000).then(async () => {
+      const state = await page.evaluate(async () => {
+        const registration = await navigator.serviceWorker.getRegistration();
+        return {
+          controller: Boolean(navigator.serviceWorker.controller),
+          installing: registration?.installing?.state,
+          waiting: registration?.waiting?.state,
+          active: registration?.active?.state,
+        };
+      });
+      throw new Error(`Service worker was not ready after first visit: ${JSON.stringify(state)}`);
+    }),
+  ]);
   await context.setOffline(true);
   await page.reload({ waitUntil: 'domcontentloaded' });
   assert.equal(await page.title(), 'wordly — 오프라인 영단어');
@@ -44,7 +57,7 @@ try {
     (message) => !message.includes('ERR_INTERNET_DISCONNECTED') && !message.includes('Failed to load resource'),
   );
   assert.deepEqual(relevantErrors, []);
-  console.log('Smoke test passed: mobile TOEIC flow, PWA manifest, and offline reload.');
+  console.log('Smoke test passed: mobile TOEIC flow, PWA manifest, and cold first-visit offline reload.');
 } finally {
   await browser.close();
 }

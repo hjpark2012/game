@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wordly-v4';
+const CACHE_NAME = 'wordly-v5';
 const BASE_PATH = new URL('./', self.location).pathname;
 const APP_SHELL = [
   BASE_PATH,
@@ -8,8 +8,24 @@ const APP_SHELL = [
   `${BASE_PATH}icons/icon-512.png`
 ];
 
+async function precacheAppShell() {
+  const cache = await caches.open(CACHE_NAME);
+  const pageResponse = await fetch(BASE_PATH, { cache: 'reload' });
+  if (!pageResponse.ok) throw new Error('App shell page could not be downloaded.');
+
+  const html = await pageResponse.clone().text();
+  const discoveredAssets = [...html.matchAll(/(?:src|href)="([^"]+)"/g)]
+    .map((match) => new URL(match[1], self.location.origin))
+    .filter((url) => url.origin === self.location.origin && url.pathname.startsWith(BASE_PATH))
+    .map((url) => url.href);
+  const shellAssets = APP_SHELL.slice(1).map((path) => new URL(path, self.location.origin).href);
+
+  await cache.put(BASE_PATH, pageResponse);
+  await cache.addAll([...new Set([...shellAssets, ...discoveredAssets])]);
+}
+
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(precacheAppShell().then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
