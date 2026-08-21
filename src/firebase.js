@@ -2,10 +2,12 @@ import { initializeApp } from 'firebase/app';
 import {
   browserLocalPersistence,
   getAuth,
+  getRedirectResult,
   GoogleAuthProvider,
   onAuthStateChanged,
   setPersistence,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
 } from 'firebase/auth';
 import {
@@ -43,7 +45,18 @@ export function observeUser(callback) {
 }
 
 export async function loginWithGoogle() {
-  return signInWithPopup(auth, provider);
+  try {
+    return await signInWithPopup(auth, provider);
+  } catch (error) {
+    if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/operation-not-supported-in-this-environment') {
+      return signInWithRedirect(auth, provider);
+    }
+    throw error;
+  }
+}
+
+export async function completeRedirectSignIn() {
+  return getRedirectResult(auth);
 }
 
 export async function logoutUser() {
