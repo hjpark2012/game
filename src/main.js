@@ -1,5 +1,6 @@
 import './style.css';
 import {
+  completeRedirectSignIn,
   loadCloudProgress,
   loginWithGoogle,
   logoutUser,
@@ -144,9 +145,17 @@ async function handleGoogleAuth() {
     if (currentUser) { await logoutUser(); toast('로그아웃했어요. 기록은 기기에 남아 있어요.'); }
     else await loginWithGoogle();
   } catch (error) {
-    if (error?.code !== 'auth/popup-closed-by-user') toast('Google 로그인에 실패했어요. 잠시 후 다시 시도해 주세요.');
+    if (error?.code !== 'auth/popup-closed-by-user') {
+      const reason = error?.code?.replace('auth/', '') || 'unknown';
+      toast(`Google 로그인에 실패했어요. (${reason})`);
+    }
   }
 }
+
+completeRedirectSignIn().catch((error) => {
+  const reason = error?.code?.replace('auth/', '') || 'unknown';
+  toast(`Google 로그인 확인에 실패했어요. (${reason})`);
+});
 
 observeUser(async (user) => {
   renderUser(user);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wordly-v3';
+const CACHE_NAME = 'wordly-v4';
 const BASE_PATH = new URL('./', self.location).pathname;
 const APP_SHELL = [
   BASE_PATH,
