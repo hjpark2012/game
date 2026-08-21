@@ -4,9 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#fffaf1" />
+    <meta name="description" content="TOEIC 점수대별 단어를 오프라인에서 학습하고 게임으로 복습하는 영단어 PWA" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="wordly" />
+    <link rel="manifest" href="/game/manifest.webmanifest" />
+    <link rel="icon" href="/game/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/game/icons/icon-192.png" />
     <title>wordly — 오프라인 영단어</title>
-    <script type="module" crossorigin src="/game/assets/index-BTHRPyQ4.js"></script>
-    <link rel="stylesheet" crossorigin href="/game/assets/index-DGiCkbdD.css">
+    <script type="module" crossorigin src="/game/assets/index-DsPlnNL-.js"></script>
+    <link rel="stylesheet" crossorigin href="/game/assets/index-DhdLaiLM.css">
   </head>
   <body>
     <div class="app-shell">
@@ -23,14 +31,14 @@
           <p>매일 조금씩,<br />영어가 자라나요.</p>
           <span id="sidebarStreak">🔥 3일째 이어가는 중</span>
         </div>
-        <div class="offline-badge"><b></b> 오프라인 학습 가능</div>
+        <div class="offline-badge" id="offlineStatus"><b></b> 오프라인 학습 준비됨</div>
       </aside>
 
       <main class="content">
         <header class="topbar">
           <button class="mobile-menu" id="mobileMenu" aria-label="메뉴 열기">☰</button>
-          <div class="greeting"><span>좋은 아침이에요, 민지님</span><small id="todayDate"></small></div>
-          <div class="header-actions"><button class="sound-btn" id="soundToggle" title="발음 소리">♬</button><div class="avatar">민</div></div>
+          <div class="greeting"><span id="userGreeting">오늘도 한 걸음 시작해요</span><small id="todayDate"></small></div>
+          <div class="header-actions"><button class="install-button" id="installApp"><span>↓</span> 앱 설치</button><button class="auth-button" id="googleAuth"><span class="google-mark">G</span><span id="authLabel">Google 로그인</span><img id="userPhoto" alt="" hidden /></button><button class="sound-btn" id="soundToggle" title="발음 소리">♬</button></div>
         </header>
 
         <section class="view active" id="homeView">
@@ -40,6 +48,10 @@
           </div>
 
           <div class="section-heading"><div><p class="eyebrow">CHOOSE YOUR LEVEL</p><h2>오늘의 난이도를 골라주세요</h2></div><button class="text-button" data-view-target="study">학습 플랜 보기 →</button></div>
+          <div class="track-tabs" id="trackTabs" role="tablist" aria-label="학습 트랙">
+            <button class="active" data-track="general" role="tab">일반 영어</button>
+            <button data-track="toeic" role="tab"><b>TOEIC</b> 점수별 학습</button>
+          </div>
           <div class="level-grid" id="levelGrid"></div>
 
           <div class="dashboard-grid">
@@ -52,7 +64,7 @@
           <div class="page-head"><div><p class="eyebrow">WORD STUDY</p><h1><span id="studyLevelName">초급</span> 단어 학습</h1><p>카드를 뒤집어 뜻과 예문을 확인해 보세요.</p></div><div class="session-info"><span>오늘 학습</span><b id="sessionNumber">1 / 10</b></div></div>
           <div class="study-layout">
             <section class="flash-wrap">
-              <div class="flash-card" id="flashCard" tabindex="0" role="button" aria-label="카드 뒤집기"><div class="card-face front"><span class="card-label">ENGLISH WORD</span><span class="word-type" id="wordType">verb</span><h2 id="wordText">achieve</h2><button class="listen" id="listenWord" aria-label="단어 발음 듣기">◖</button><p class="hint">카드를 클릭하면 뜻을 볼 수 있어요 <b>↻</b></p></div><div class="card-face back"><span class="card-label">KOREAN MEANING</span><h2 id="meaningText">성취하다, 이루다</h2><p class="example" id="exampleText">She achieved her goal.</p><p class="example-meaning" id="exampleMeaning">그녀는 목표를 이루었다.</p><button class="flip-back">↻ 다시 보기</button></div></div>
+              <div class="flash-card" id="flashCard" tabindex="0" role="button" aria-label="카드 뒤집기"><div class="card-face front"><span class="card-label">ENGLISH WORD</span><span class="word-type" id="wordType">verb</span><h2 id="wordText">achieve</h2><button class="listen" id="listenWord" aria-label="단어 발음 듣기">◖</button><p class="hint">카드를 클릭하면 뜻을 볼 수 있어요 <b>↻</b></p></div><div class="card-face back"><span class="card-label">KOREAN MEANING</span><h2 id="meaningText">성취하다, 이루다</h2><p class="collocation" id="collocationText"></p><p class="example" id="exampleText">She achieved her goal.</p><p class="example-meaning" id="exampleMeaning">그녀는 목표를 이루었다.</p><button class="flip-back">↻ 다시 보기</button></div></div>
               <div class="study-actions"><button class="rating difficult" data-rating="hard"><span>😵</span> 어려워요</button><button class="rating familiar" data-rating="good"><span>🙂</span> 알 것 같아요</button><button class="rating easy" data-rating="easy"><span>✨</span> 쉬워요</button></div>
             </section>
             <aside class="study-aside"><div class="card level-summary"><p class="eyebrow">CURRENT DECK</p><h3 id="currentDeck">초급 · 필수 100</h3><p><b id="deckLearned">0</b>개 학습 완료</p><div class="mini-progress"><i id="deckProgress"></i></div></div><div class="tip"><span>☼</span><p><b>기억 팁</b><br />뜻을 보기 전, 소리 내어 먼저 읽어보세요.</p></div><button class="outline-button" data-view-target="game">게임으로 점검하기 <b>→</b></button></aside>
