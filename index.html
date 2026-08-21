@@ -3,67 +3,69 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#050912" />
-    <title>VOIDLINE // INTERCEPT</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#fffaf1" />
+    <title>wordly — 오프라인 영단어</title>
   </head>
   <body>
-    <main id="game" aria-label="Voidline space combat game">
-      <canvas id="space" aria-hidden="true"></canvas>
-      <div class="vignette" aria-hidden="true"></div>
-
-      <section class="hud" aria-label="Flight instrumentation">
-        <div class="top-bar">
-          <div class="brand"><span class="brand-mark">V</span><span>VOIDLINE</span><small>INTERCEPT COMMAND</small></div>
-          <div class="mission"><span class="live-dot"></span> SECTOR 07 // HOSTILE INCURSION</div>
-          <div class="clock" id="clock">00:00.0</div>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="logo" href="#home" aria-label="wordly home"><span>W</span>wordly</a>
+        <nav class="nav" aria-label="주 메뉴">
+          <button class="nav-link active" data-view="home"><i>⌂</i>오늘의 학습</button>
+          <button class="nav-link" data-view="study"><i>◫</i>단어 학습</button>
+          <button class="nav-link" data-view="game"><i>⌁</i>게임 센터</button>
+          <button class="nav-link" data-view="words"><i>☷</i>나의 단어장</button>
+        </nav>
+        <div class="side-card">
+          <div class="sprout">✦</div>
+          <p>매일 조금씩,<br />영어가 자라나요.</p>
+          <span id="sidebarStreak">🔥 3일째 이어가는 중</span>
         </div>
+        <div class="offline-badge"><b></b> 오프라인 학습 가능</div>
+      </aside>
 
-        <div class="objective panel">
-          <span class="eyebrow">PRIMARY OBJECTIVE</span>
-          <strong id="objective">CLEAR THE SECTOR</strong>
-          <span id="hostileCount">HOSTILES: 08</span>
-        </div>
+      <main class="content">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobileMenu" aria-label="메뉴 열기">☰</button>
+          <div class="greeting"><span>좋은 아침이에요, 민지님</span><small id="todayDate"></small></div>
+          <div class="header-actions"><button class="sound-btn" id="soundToggle" title="발음 소리">♬</button><div class="avatar">민</div></div>
+        </header>
 
-        <div class="target-info panel" id="targetInfo">
-          <span class="eyebrow">LOCKED CONTACT</span>
-          <strong id="targetName">NO TARGET</strong>
-          <div class="target-row"><span id="targetDist">—</span><span id="targetState">SCANNING</span></div>
-          <div class="target-health"><i id="targetHealth"></i></div>
-        </div>
+        <section class="view active" id="homeView">
+          <div class="hero">
+            <div class="hero-copy"><p class="eyebrow">TODAY'S LITTLE STEP</p><h1>오늘, 어떤 단어를<br /><em>만나볼까요?</em></h1><p>나에게 딱 맞는 난이도로 가볍게 시작해요.</p></div>
+            <div class="hero-illustration" aria-hidden="true"><span class="sun"></span><span class="cloud c1"></span><span class="cloud c2"></span><span class="hill h1"></span><span class="hill h2"></span><span class="book">ABC</span><span class="leaf l1">✦</span><span class="leaf l2">●</span></div>
+          </div>
 
-        <div class="left-readouts">
-          <div class="readout speed"><span>VELOCITY</span><strong id="speed">580</strong><em>KPS</em></div>
-          <div class="readout altitude"><span>VECTOR</span><strong id="vector">000</strong><em>°</em></div>
-          <div class="bar-group"><div><span>HULL</span><b id="hullText">100</b></div><div class="meter hull"><i id="hullBar"></i></div></div>
-          <div class="bar-group"><div><span>BOOST</span><b id="boostText">100</b></div><div class="meter boost"><i id="boostBar"></i></div></div>
-        </div>
+          <div class="section-heading"><div><p class="eyebrow">CHOOSE YOUR LEVEL</p><h2>오늘의 난이도를 골라주세요</h2></div><button class="text-button" data-view-target="study">학습 플랜 보기 →</button></div>
+          <div class="level-grid" id="levelGrid"></div>
 
-        <div class="radar panel" aria-label="Tactical radar"><span class="eyebrow">TACTICAL // 4.8KM</span><div class="radar-screen"><div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-axis x"></div><div class="radar-axis y"></div><div class="ship-dot"></div><div id="radarDots"></div></div></div>
+          <div class="dashboard-grid">
+            <section class="daily-card card"><div class="card-title"><div><p class="eyebrow">DAILY GOAL</p><h3>오늘의 목표</h3></div><span class="pill" id="goalCount">0 / 10 단어</span></div><div class="progress-track"><i id="goalProgress"></i></div><p class="goal-note" id="goalNote">첫 단어를 만나러 가볼까요?</p><button class="primary-button small" data-view-target="study">학습 시작하기 <b>→</b></button></section>
+            <section class="streak-card card"><p class="eyebrow">LEARNING RHYTHM</p><h3><strong id="streakNumber">3</strong>일 연속 학습 중!</h3><div class="week" id="weekDays"></div><p>작은 습관이 큰 자신감을 만들어요.</p></section>
+          </div>
+        </section>
 
-        <div class="weapon-panel panel"><span class="eyebrow">ARMAMENT</span><div class="weapon-row"><span class="weapon-icon">⊹</span><div><strong>PLASMA CANNON</strong><small>∞ CHARGE</small></div><kbd>CLICK</kbd></div><div class="weapon-row missile"><span class="weapon-icon">◈</span><div><strong>SEEKER MISSILES</strong><small id="missileCount">04 ORDNANCE</small></div><kbd>Q</kbd></div></div>
+        <section class="view" id="studyView">
+          <div class="page-head"><div><p class="eyebrow">WORD STUDY</p><h1><span id="studyLevelName">초급</span> 단어 학습</h1><p>카드를 뒤집어 뜻과 예문을 확인해 보세요.</p></div><div class="session-info"><span>오늘 학습</span><b id="sessionNumber">1 / 10</b></div></div>
+          <div class="study-layout">
+            <section class="flash-wrap">
+              <div class="flash-card" id="flashCard" tabindex="0" role="button" aria-label="카드 뒤집기"><div class="card-face front"><span class="card-label">ENGLISH WORD</span><span class="word-type" id="wordType">verb</span><h2 id="wordText">achieve</h2><button class="listen" id="listenWord" aria-label="단어 발음 듣기">◖</button><p class="hint">카드를 클릭하면 뜻을 볼 수 있어요 <b>↻</b></p></div><div class="card-face back"><span class="card-label">KOREAN MEANING</span><h2 id="meaningText">성취하다, 이루다</h2><p class="example" id="exampleText">She achieved her goal.</p><p class="example-meaning" id="exampleMeaning">그녀는 목표를 이루었다.</p><button class="flip-back">↻ 다시 보기</button></div></div>
+              <div class="study-actions"><button class="rating difficult" data-rating="hard"><span>😵</span> 어려워요</button><button class="rating familiar" data-rating="good"><span>🙂</span> 알 것 같아요</button><button class="rating easy" data-rating="easy"><span>✨</span> 쉬워요</button></div>
+            </section>
+            <aside class="study-aside"><div class="card level-summary"><p class="eyebrow">CURRENT DECK</p><h3 id="currentDeck">초급 · 필수 100</h3><p><b id="deckLearned">0</b>개 학습 완료</p><div class="mini-progress"><i id="deckProgress"></i></div></div><div class="tip"><span>☼</span><p><b>기억 팁</b><br />뜻을 보기 전, 소리 내어 먼저 읽어보세요.</p></div><button class="outline-button" data-view-target="game">게임으로 점검하기 <b>→</b></button></aside>
+          </div>
+        </section>
 
-        <div class="reticle" id="reticle"><span class="reticle-distance" id="reticleDistance">2.4KM</span><i class="r-tl"></i><i class="r-tr"></i><i class="r-bl"></i><i class="r-br"></i><b></b></div>
-        <div class="hit-marker" id="hitMarker">×</div>
+        <section class="view" id="gameView">
+          <div class="page-head game-head"><div><p class="eyebrow">PLAY &amp; REVIEW</p><h1>게임으로 <em>점검해요</em></h1><p>뜻을 보고 알맞은 영단어를 빠르게 골라보세요.</p></div><div class="score-chip">★ <b id="gameScore">0</b> 점</div></div>
+          <div class="game-layout"><section class="quiz-card card"><div class="quiz-top"><span class="round">ROUND <b id="roundNumber">01</b> / 10</span><div class="round-track"><i id="roundProgress"></i></div></div><p class="quiz-prompt">이 뜻에 알맞은 단어는?</p><h2 id="quizMeaning">성취하다, 이루다</h2><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="primary-button next-button" id="nextQuestion" hidden>다음 문제 <b>→</b></button></section><aside class="game-aside"><div class="mascot"><div class="face">•ᴗ•</div><span>✦</span></div><h3>집중력 최고!</h3><p>정답을 맞힐 때마다<br />별을 모을 수 있어요.</p><div class="stars"><span>★</span><span>★</span><span>☆</span><span>☆</span><span>☆</span></div></aside></div>
+        </section>
 
-        <div class="cockpit" aria-hidden="true"><div class="cockpit-left"></div><div class="cockpit-right"></div><div class="cockpit-bottom"></div></div>
-        <div class="bottom-bar"><span><kbd>W A S D</kbd> MANEUVER</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>Q</kbd> MISSILE</span><span><kbd>R</kbd> RESTART</span><span class="score">SCORE <b id="score">000000</b></span></div>
-      </section>
-
-      <section class="start-screen" id="startScreen">
-        <div class="start-card">
-          <p class="eyebrow">V/07 // DEEP SPACE COMBAT SIMULATION</p>
-          <h1>VOIDLINE<br /><span>INTERCEPT</span></h1>
-          <p class="intro">고속 요격기를 타고 적 함대의 침입을 저지하십시오.<br />조준은 마우스, 공격은 클릭으로 시작합니다.</p>
-          <button id="launch">MISSION LAUNCH <span>↗</span></button>
-          <div class="tips"><span>WASD / ARROWS — MANEUVER</span><span>SHIFT — AFTERBURNER</span><span>Q — SEEKER</span></div>
-        </div>
-      </section>
-
-      <section class="end-screen hidden" id="endScreen"><div class="end-card"><p class="eyebrow" id="resultLabel">SECTOR SECURED</p><h2 id="resultTitle">MISSION<br /><span>COMPLETE</span></h2><p id="resultText">침입 함대를 격퇴했습니다.</p><div class="final-score"><small>FINAL SCORE</small><strong id="finalScore">000000</strong></div><button id="restart">REDEPLOY <span>↗</span></button></div></section>
-    </main>
+        <section class="view" id="wordsView"><div class="page-head"><div><p class="eyebrow">MY VOCABULARY</p><h1>나의 단어장</h1><p>학습한 단어를 난이도별로 다시 살펴보세요.</p></div></div><div class="word-list card" id="wordList"></div></section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
